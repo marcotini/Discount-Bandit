@@ -16,6 +16,7 @@ use Illuminate\Validation\ValidationException;
 // })->middleware('auth:sanctum');
 //
 Route::middleware('auth:sanctum')
+    ->name('api.')
     ->group(function () {
         Route::post('/links/add', AddLinkFromBrowserPluginAction::class);
 

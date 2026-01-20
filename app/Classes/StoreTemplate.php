@@ -91,9 +91,9 @@ abstract class StoreTemplate
         if ($this->chromium_crawler) {
             $this->dom = new ChromiumCrawler(
                 url: $this->current_product_url,
+                extra_headers: $this->extra_headers,
                 timeout_ms: $this->chromium_options['timeout_ms'],
                 page_event: $this->chromium_options['page'],
-                extra_headers: $this->extra_headers,
             )->dom;
         } else {
             $this->dom = new SimpleCrawler(
@@ -189,6 +189,12 @@ abstract class StoreTemplate
                 ->whereIn('id', $products_to_increment)
                 ->increment('notifications_sent');
         }
+
+        if (filled($this->link->name))
+            unset($this->product_data['name']);
+
+        if (filled($this->link->image))
+            unset($this->product_data['image']);
 
         $this->link->update($this->product_data + [
             'highest_price' => ($this->product_data['price'] > $this->link->highest_price) ? $this->product_data['price'] : $this->link->highest_price,

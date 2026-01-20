@@ -120,7 +120,7 @@ class ProductsTable
                                     TextColumn::make('links')
                                         ->formatStateUsing(function ($state) {
                                             $price = $state->highest_price;
-                                            if (Auth::user()->currency_id) {
+                                            if (Auth::user()->currency_id && Auth::user()->currency->rate) {
                                                 $price = $price * Auth::user()->currency->rate / $state->store->currency->rate;
                                             }
 
@@ -137,7 +137,7 @@ class ProductsTable
                                         ->formatStateUsing(function ($state) {
                                             $price = $state->price;
                                             $code = $state->store->currency->code;
-                                            if (Auth::user()->currency_id) {
+                                            if (Auth::user()->currency_id && Auth::user()->currency->rate) {
                                                 $price = $price * Auth::user()->currency->rate / $state->store->currency->rate;
                                                 $code = Auth::user()->currency->code;
                                             }
@@ -159,7 +159,7 @@ class ProductsTable
                                         ->color('success')
                                         ->formatStateUsing(function ($state) {
                                             $price = $state->lowest_price;
-                                            if (Auth::user()->currency_id) {
+                                            if (Auth::user()->currency_id && Auth::user()->currency->rate) {
                                                 $price = $price * Auth::user()->currency->rate / $state->store->currency->rate;
                                             }
                                             return Number::format($price);

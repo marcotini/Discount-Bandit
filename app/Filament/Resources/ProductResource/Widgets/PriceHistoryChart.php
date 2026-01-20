@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\ProductResource\Widgets;
 
 use App\Models\Link;
+use Carbon\Carbon;
 use Filament\Forms\Components\DatePicker;
 use Filament\Schemas\Schema;
 use Filament\Support\RawJs;
@@ -34,8 +35,8 @@ class PriceHistoryChart extends ApexChartWidget
      */
     protected function getOptions(): array
     {
-        $start_date = $this->filters['start_date'];
-        $end_date = $this->filters['end_date'];
+        $start_date = Carbon::parse($this->filters['start_date']);
+        $end_date = Carbon::parse($this->filters['end_date']);
         $time_series = [];
 
         Link::whereHas('products', function ($query) {

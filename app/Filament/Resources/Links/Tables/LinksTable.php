@@ -123,7 +123,7 @@ class LinksTable
                     ->formatStateUsing(function ($record) {
                         $price = $record->highest_price;
                         $code = $record->store->currency->code;
-                        if (Auth::user()->currency_id) {
+                        if (Auth::user()->currency_id && Auth::user()->currency->rate) {
                             $price = $price * Auth::user()->currency->rate / $record->store->currency->rate;
                             $code = Auth::user()->currency->code;
                         }
@@ -138,7 +138,7 @@ class LinksTable
                     ->formatStateUsing(function ($record) {
                         $price = $record->price;
                         $code = $record->store->currency->code;
-                        if (Auth::user()->currency_id) {
+                        if (Auth::user()->currency_id && Auth::user()->currency->rate) {
                             $price = $price * Auth::user()->currency->rate / $record->store->currency->rate;
                             $code = Auth::user()->currency->code;
                         }
@@ -153,7 +153,7 @@ class LinksTable
                     ->formatStateUsing(function ($record) {
                         $price = $record->used_price;
                         $code = $record->store->currency->code;
-                        if (Auth::user()->currency_id) {
+                        if (Auth::user()->currency_id && Auth::user()->currency->rate) {
                             $price = $price * Auth::user()->currency->rate / $record->store->currency->rate;
                             $code = Auth::user()->currency->code;
                         }
@@ -165,10 +165,10 @@ class LinksTable
 
                 TextColumn::make('lowest_price')
                     ->label('Lowest')
-                    ->formatStateUsing(function ($record) {
+                    ->formatStateUsing(callback: function ($record) {
                         $price = $record->lowest_price;
                         $code = $record->store->currency->code;
-                        if (Auth::user()->currency_id) {
+                        if (Auth::user()->currency_id && Auth::user()->currency->rate) {
                             $price = $price * Auth::user()->currency->rate / $record->store->currency->rate;
                             $code = Auth::user()->currency->code;
                         }

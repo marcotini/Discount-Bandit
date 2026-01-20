@@ -36,7 +36,7 @@ class ChromiumCrawler
 
         $options = [
             //
-            'connectionDelay' => 1,
+            'connectionDelay' => 1.32,
             'headless' => false,
             'noSandbox' => true,
             "headers" => $extra_headers,

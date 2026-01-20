@@ -18,7 +18,12 @@ class EditProduct extends EditRecord
     {
         return [
             DeleteAction::make()
-                ->icon(Heroicon::Trash),
+                ->icon(Heroicon::Trash)
+                ->action(function ($record) {
+                    $record->categories()->detach();
+                    $record->links()->detach();
+                    $record->delete();
+                }),
 
             Action::make('Fetch')
                 ->color('primary')

@@ -34,14 +34,13 @@ class BestBuy extends StoreTemplate
     public function __construct(Link $link, array $extra_headers = [], ?string $user_agent = '')
     {
 
-        //        if ($this->link->store->domain === "bestbuy.ca") {
-        //            $this->chromium_crawler = true;
-        //            $this->extra_headers = $extra_headers + ['X-CLIENT-ID' => 'lib-price-browser'] + $this->extra_headers;
-        //        } else {
-        $this->extra_headers = $extra_headers + $this->extra_headers;
-        //        }
-
-        $this->user_agent = ($user_agent) ?: UserAgentHelper::get_random_user_agent();
+        if ($link->store->domain === "bestbuy.ca") {
+            $this->chromium_crawler = true;
+            $this->extra_headers = $extra_headers + ['X-CLIENT-ID' => 'lib-price-browser'] + $this->extra_headers;
+        } else {
+            $this->extra_headers = $extra_headers + $this->extra_headers;
+            $this->user_agent = ($user_agent) ?: UserAgentHelper::get_random_user_agent();
+        }
 
         parent::__construct($link);
     }
@@ -62,7 +61,7 @@ class BestBuy extends StoreTemplate
         return Str::replace(
             ["[domain]", "[product_key]"],
             [$link->store->domain, $link_base],
-            ($link->store->domain == "bestbuy.com") ? self::MAIN_URL : self::CANADA_URL) ."?{$link_params}";
+            ($link->store->domain == "bestbuy.com") ? self::MAIN_URL : self::CANADA_URL)."?{$link_params}";
     }
 
     public function get_name(): void
@@ -78,6 +77,7 @@ class BestBuy extends StoreTemplate
     {
         $ids_and_tag_selector = [
             '.pdp-media-gallery img:first-child',
+            '[class^="mediaGalleryGridArea"] img:first-child',
         ];
         $results = $this->dom->querySelectorAll(implode(',', $ids_and_tag_selector));
 
@@ -87,7 +87,7 @@ class BestBuy extends StoreTemplate
 
         foreach ($attributes as $attribute) {
             $image_url = $results[0]?->getAttribute($attribute);
-            if (! empty($image_url)) {
+            if (filled($image_url)) {
                 $this->product_data['image'] = explode(';', $image_url)[0];
                 break;
             }
@@ -143,12 +143,20 @@ class BestBuy extends StoreTemplate
             '#corePrice_feature_div span.a-price-fraction',
         ];
 
+        $full_price_selectors = [
+            '[class^="style-module_price_"]',
+        ];
+
         $results_whole = $this->dom->querySelectorAll(implode(',', $whole_price_selectors));
         $results_fraction = $this->dom->querySelectorAll(implode(',', $fractional_price_selectors));
+        $full_price_results = $this->dom->querySelectorAll(implode(',', $full_price_selectors));
 
         $only_whole = GeneralHelper::get_numbers_only($results_whole[0]?->textContent);
         $this->product_data['price'] = (float) "{$only_whole}.{$results_fraction[0]?->textContent}";
 
+        if (! $this->product_data['price']) {
+            $this->product_data['price'] = (float) GeneralHelper::get_numbers_only_with_dot($full_price_results[0]?->textContent);
+        }
     }
 
     public function get_used_price(): void

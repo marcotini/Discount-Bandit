@@ -139,7 +139,7 @@ class Newegg extends StoreTemplate
         $currency_detected = $this->schema['offers']['priceCurrency'];
         $currency = Currency::firstWhere('code', $currency_detected);
 
-        if ($currency && $currency->code != $this->link->store->currency->code) {
+        if ($currency && $currency->code != $this->link->store->currency->code && $currency->rate) {
             $this->product_data['price'] = ($this->product_data['price'] / $currency->rate) * $this->link->store->currency->rate;
         }
     }
