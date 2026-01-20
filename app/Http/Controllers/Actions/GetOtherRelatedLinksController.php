@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Actions;
 
-use App\Helpers\ProductHelper;
+use App\Helpers\LinkHelper;
+use App\Http\Controllers\Controller;
 use App\Models\Link;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -20,7 +21,6 @@ class GetOtherRelatedLinksController extends Controller
             ->where('link_id', $link->id)
             ->pluck('product_id');
 
-
         $links = Product::withoutGlobalScopes()
             ->where('products.user_id', Auth::id())
             ->whereIn('products.id', $product_have_the_link)
@@ -35,7 +35,8 @@ class GetOtherRelatedLinksController extends Controller
             ])
             ->get()
             ->map(function ($link) {
-                $link->url = ProductHelper::get_url($link);
+                $link->url = LinkHelper::get_url($link);
+
                 return $link;
             });
 
