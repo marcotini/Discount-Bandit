@@ -92,7 +92,6 @@ class CommunityStoresForm
                                     'xl' => 4,
                                     '2xl' => 4,
                                 ])
-                                ->live()
                                 ->minSelect(1),
 
                             // Hidden field to trigger domain fetch in the next step
@@ -141,7 +140,6 @@ class CommunityStoresForm
                                     'xl' => 4,
                                     '2xl' => 4,
                                 ])
-                                ->live()
                                 ->minSelect(1),
 
                         ]),
