@@ -82,7 +82,7 @@ class ProductForm
                     ->onIcon(Heroicon::Star)
                     ->offIcon(Heroicon::Star)
                     ->inline(false)
-                    ->label("Add To Favourite"),
+                    ->label("Favourite"),
             ]);
     }
 }

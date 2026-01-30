@@ -199,9 +199,17 @@ class LinksTable
                     ->numeric(),
 
                 TextColumn::make('updated_at')
+                    ->label('Last updated')
                     ->toggleable()
                     ->dateTime()
                     ->sortable(),
+
+                TextColumn::make('created_at')
+                    ->label('Added')
+                    ->toggleable()
+                    ->dateTime()
+                    ->formatStateUsing(fn ($record) => $record->pivot?->created_at),
+
             ])
             ->filters([
                 SelectFilter::make('store_id')

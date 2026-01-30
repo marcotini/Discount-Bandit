@@ -29,15 +29,18 @@ class NotificationSettingsTable
                     ->suffix('%'),
 
                 TextColumn::make('extra_costs_amount')
+                    ->label('Extra cost')
                     ->sortable()
                     ->numeric(),
 
                 TextColumn::make('extra_costs_percentage')
+                    ->label('Extra cost %')
                     ->sortable()
                     ->numeric()
                     ->suffix('%'),
 
                 TextColumn::make('price_lowest_in_x_days')
+                    ->label('Lowest price in')
                     ->sortable()
                     ->numeric()
                     ->suffix('days'),

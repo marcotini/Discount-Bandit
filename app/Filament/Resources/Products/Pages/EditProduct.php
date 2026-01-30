@@ -9,6 +9,7 @@ use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Contracts\Support\Htmlable;
 
 class EditProduct extends EditRecord
 {
@@ -39,4 +40,10 @@ class EditProduct extends EditRecord
             PriceHistoryChart::class,
         ];
     }
+
+    public function getTitle(): string|Htmlable
+    {
+        return $this->record->name;
+    }
+
 }

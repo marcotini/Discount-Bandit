@@ -20,7 +20,7 @@ class PriceHistoryChart extends ApexChartWidget
 
     protected static bool $deferLoading = true;
 
-    protected static ?string $heading = 'Price History';
+    protected static ?string $heading = 'History';
 
     protected int|string|array $columnSpan = 'full';
 
