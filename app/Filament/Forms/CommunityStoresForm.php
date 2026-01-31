@@ -151,6 +151,11 @@ class CommunityStoresForm
                     $image_link = config('settings.github_community_store_gist_base').$domain['store'].'/logo.png';
                     AddStoreToDiscountJob::dispatch($domain['path'], $image_link);
                 }
+
+                Notification::make()
+                    ->title('Store are being added to discount system')
+                    ->success()
+                    ->send();
             });
     }
 }
