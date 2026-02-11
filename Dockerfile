@@ -32,9 +32,9 @@ RUN apt update && apt install -y supervisor  \
         chromium-driver \
         xvfb \
         xdg-utils \
+        nodejs \
+        npm \
         && apt-get clean
-
-
 
 # Set environment variables for Chromium
 ENV CHROME_BIN="/usr/bin/chromium-browser"
@@ -55,7 +55,6 @@ RUN docker-php-ext-install   pcntl \
         sockets \
         zip
 
-
 COPY ./docker/base_supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 COPY . /app
@@ -64,10 +63,18 @@ WORKDIR /app
 
 EXPOSE 80 443 2019 8080
 
-
 RUN chmod +x /app/*
 
 RUN mkdir -p /config/chromium
+
+# Install PHP dependencies first (needed for Vite to resolve vendor/filament CSS)
+RUN composer install --no-interaction --no-progress --no-dev --optimize-autoloader
+
+# Build Vite frontend assets (requires vendor/filament from composer)
+RUN npm install && npm run build && rm -rf node_modules
+
+# Remove .env files - entrypoint.sh will generate a clean one from docker-compose env vars
+RUN rm -f /app/.env /app/.env.example
 
 ENV DISPLAY=:99
 
